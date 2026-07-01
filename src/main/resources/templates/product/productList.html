@@ -26,7 +26,7 @@
         }
 
         .card {
-            background: rgba(30, 27, 75, 0.85);
+            background: #ffffff;
             border: 1px solid rgba(139, 92, 246, 0.35);
             border-radius: 24px;
             padding: 20px;
@@ -47,10 +47,11 @@
             padding: 10px 20px;
             background: linear-gradient(90deg, #8b5cf6, #06b6d4);
             color: #ffffff;
-            text-decoration: none;
+            border: none;
             border-radius: 999px;
             font-size: 14px;
             font-weight: 600;
+            cursor: pointer;
             transition: 0.2s;
         }
 
@@ -66,7 +67,7 @@
 
         input, select {
             padding: 8px 12px;
-            background: rgba(15, 23, 42, 0.9);
+            background: #ffffff;
             border: 1px solid rgba(139, 92, 246, 0.35);
             border-radius: 12px;
             color: #e0e7ff;
@@ -111,7 +112,7 @@
         }
 
         table tbody tr {
-            background: rgba(15, 23, 42, 0.85);
+            background: #ffffff;
         }
 
         table tbody td {
@@ -132,11 +133,12 @@
             padding: 6px 16px;
             background: linear-gradient(90deg, #8b5cf6, #06b6d4);
             color: #ffffff;
-            text-decoration: none;
+            border: none;
             border-radius: 999px;
             font-size: 13px;
             font-weight: 600;
             margin-right: 8px;
+            cursor: pointer;
             transition: 0.2s;
         }
 
@@ -175,6 +177,119 @@
             color: #94a3b8;
             font-size: 14px;
         }
+
+        /* ========== 弹窗样式 ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 24px;
+            padding: 32px;
+            width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 45px rgba(139, 92, 246, 0.35);
+        }
+
+        .modal-box h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-box .form-item {
+            margin-bottom: 16px;
+        }
+
+        .modal-box .form-item label {
+            display: block;
+            margin-bottom: 6px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .modal-box .form-item input,
+        .modal-box .form-item select,
+        .modal-box .form-item textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: #ffffff;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 12px;
+            color: #1e293b;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .modal-box .form-item input:focus,
+        .modal-box .form-item select:focus,
+        .modal-box .form-item textarea:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        .modal-box .form-item textarea {
+            min-height: 80px;
+            resize: none;
+        }
+
+        .modal-box .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-box .save-btn {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            border: none;
+            border-radius: 999px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-box .save-btn:hover {
+            filter: brightness(1.08);
+        }
+
+        .modal-box .cancel-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 999px;
+            color: #64748b;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-box .cancel-btn:hover {
+            background: rgba(139, 92, 246, 0.08);
+        }
     </style>
 </head>
 <body>
@@ -196,7 +311,7 @@
         </form>
 
         <div xmlns:sec="http://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('admin')">
-            <a class="add-btn" th:href="@{/product/edit}">+ 新增商品</a>
+            <button class="add-btn" onclick="openProductModal()">+ 新增商品</button>
         </div>
     </div>
 
@@ -219,7 +334,9 @@
             <td th:text="${prod.categoryName}"></td>
             <td th:text="${prod.releaseDate}"></td>
             <td xmlns:sec="http://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('admin')">
-                <a class="edit" th:href="@{/product/edit/{id}(id=${prod.id})}">编辑</a>
+                <button class="edit"
+                        th:attr="data-id=${prod.id},data-name=${prod.name},data-price=${prod.price},data-catid=${prod.catId},data-descp=${prod.descp},data-photourl=${prod.photoUrl},data-releasedate=${prod.releaseDate}"
+                        onclick="openProductModal(this)">编辑</button>
                 <a class="del" th:href="@{/product/delete/{id}(id=${prod.id})}" onclick="return confirm('确定要删除该商品吗？')">删除</a>
             </td>
         </tr>
@@ -236,6 +353,108 @@
         <a th:href="@{/product/list(pageNum=${pageInfo.pages},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">尾页</a>
     </div>
 </div>
+
+<!-- ========== 弹窗 ========== -->
+<div class="modal-overlay" id="productModal">
+    <div class="modal-box">
+        <h3 id="productModalTitle">新增商品</h3>
+        <form id="productForm">
+            <input type="hidden" name="id" id="productId">
+
+            <div class="form-item">
+                <label>商品名称</label>
+                <input name="name" id="productName" required>
+            </div>
+
+            <div class="form-item">
+                <label>售价</label>
+                <input name="price" id="productPrice" type="number" step="0.01" required>
+            </div>
+
+            <div class="form-item">
+                <label>所属分类</label>
+                <select name="catId" id="productCatId" required>
+                    <option value="">-- 请选择分类 --</option>
+                    <option th:each="cate:${cateList}" th:value="${cate.id}" th:text="${cate.name}"></option>
+                </select>
+            </div>
+
+            <div class="form-item">
+                <label>商品描述</label>
+                <textarea name="descp" id="productDescp"></textarea>
+            </div>
+
+            <div class="form-item">
+                <label>图片URL</label>
+                <input name="photoUrl" id="productPhotoUrl">
+            </div>
+
+            <div class="form-item">
+                <label>发布日期</label>
+                <input name="releaseDate" id="productReleaseDate" type="date">
+            </div>
+
+            <div class="btn-row">
+                <button class="save-btn" type="submit">保存</button>
+                <button class="cancel-btn" type="button" onclick="closeProductModal()">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('productModal');
+    const form = document.getElementById('productForm');
+    const title = document.getElementById('productModalTitle');
+
+    function openProductModal(el) {
+        if (el) {
+            // 编辑模式
+            title.textContent = '编辑商品';
+            document.getElementById('productId').value = el.dataset.id || '';
+            document.getElementById('productName').value = el.dataset.name || '';
+            document.getElementById('productPrice').value = el.dataset.price || '';
+            document.getElementById('productCatId').value = el.dataset.catid || '';
+            document.getElementById('productDescp').value = el.dataset.descp || '';
+            document.getElementById('productPhotoUrl').value = el.dataset.photourl || '';
+            document.getElementById('productReleaseDate').value = el.dataset.releasedate || '';
+        } else {
+            // 新增模式
+            title.textContent = '新增商品';
+            form.reset();
+            document.getElementById('productId').value = '';
+        }
+        modal.classList.add('show');
+    }
+
+    function closeProductModal() {
+        modal.classList.remove('show');
+    }
+
+    // 点击遮罩关闭
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeProductModal();
+    });
+
+    // AJAX 提交
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+        for (const [k, v] of formData.entries()) params.append(k, v);
+
+        fetch('/product/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        }).then(function(res) {
+            if (res.ok || res.redirected) {
+                closeProductModal();
+                location.reload();
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

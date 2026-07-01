@@ -16,78 +16,89 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* 匹配参考图深紫渐变底色 */
-            background: radial-gradient(circle at top left, rgba(124, 58, 237, 0.3), transparent 40%),
-            radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.3), transparent 40%),
-            linear-gradient(135deg, #2c2050 0%, #3b2b66 100%);
-            color: #e0e7ff;
+            padding: 5% 8%;
+            background: url('/雪山背景.png') center/auto no-repeat;
+            background-color: #f0f0f0;
+            position: relative;
+            overflow: hidden;
         }
 
+
+        /* 右侧注册玻璃卡片 */
         .register-card {
             width: 440px;
             padding: 36px;
-            background: rgba(45, 32, 78, 0.85);
-            border: 1px solid rgba(139, 92, 246, 0.35);
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.9);
             border-radius: 24px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 0 40px rgba(139, 92, 246, 0.28);
+            backdrop-filter: blur(20px);
+            box-shadow:
+                    0 18px 45px rgba(0, 0, 0, 0.08),
+                    0 0 0 1px rgba(168, 85, 247, 0.04);
+            z-index: 1;
         }
 
         .register-card h2 {
             text-align: center;
-            margin-bottom: 26px;
-            font-size: 26px;
-            /* 紫蓝渐变文字，和参考图标题配色一致 */
-            background: linear-gradient(90deg, #a855f7, #38bdf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 8px;
+            font-size: 24px;
+            color: #1e293b;
+        }
+
+        .register-card .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .form-item {
+            margin-bottom: 16px;
+        }
+
+        .form-item label {
+            display: block;
+            margin-bottom: 6px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .form-item input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(248, 250, 252, 0.95);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            color: #1e293b;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        .form-item input:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
         }
 
         .success-tip {
-            color: #34d399;
+            color: #10b981;
             text-align: center;
             padding: 10px;
-            background: rgba(52, 211, 153, 0.12);
+            background: rgba(16, 185, 129, 0.1);
             border-radius: 12px;
             margin-bottom: 18px;
             font-size: 14px;
         }
         .success-tip a {
-            color: #38bdf8;
+            color: #a855f7;
             text-decoration: none;
         }
 
-        .form-item {
-            margin-bottom: 18px;
-        }
-        .form-item label {
-            display: block;
-            margin-bottom: 6px;
-            color: #c7d2fe;
-            font-size: 14px;
-        }
-        .form-item input {
-            width: 100%;
-            padding: 11px 14px;
-            background: rgba(26, 16, 53, 0.9);
-            border: 1px solid rgba(139, 92, 246, 0.35);
-            border-radius: 14px;
-            color: #e0e7ff;
-            font-size: 15px;
-            outline: none;
-            transition: 0.2s ease;
-        }
-        .form-item input:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.16);
-        }
-
         .error-tip {
-            color: #f87171;
+            color: #ef4444;
             text-align: center;
             padding: 10px;
-            background: rgba(248, 113, 113, 0.12);
+            background: rgba(239, 68, 68, 0.1);
             border-radius: 12px;
             margin-bottom: 18px;
             font-size: 14px;
@@ -96,8 +107,7 @@
         .submit-btn {
             width: 100%;
             padding: 12px;
-            /* 参考图同款紫蓝渐变圆角按钮 */
-            background: linear-gradient(90deg, #a855f7, #38bdf8);
+            background: linear-gradient(90deg, #7dd3fc, #507593);
             border: none;
             border-radius: 999px;
             color: #ffffff;
@@ -106,8 +116,10 @@
             cursor: pointer;
             transition: 0.2s ease;
         }
+
+
         .submit-btn:hover {
-            filter: brightness(1.1);
+            filter: brightness(1.08);
         }
 
         .login-link {
@@ -117,20 +129,37 @@
             color: #94a3b8;
         }
         .login-link a {
-            color: #a855f7;
+            color: #043fc5;
             text-decoration: none;
+            font-weight: 500;
         }
+
         .login-link a:hover {
             color: #38bdf8;
+        }
+
+        /* 移动端适配，小屏隐藏插画居中卡片 */
+        @media (max-width: 992px) {
+            body {
+                justify-content: center;
+                padding: 20px;
+            }
+            .register-card {
+                width: 100%;
+                max-width: 440px;
+            }
         }
     </style>
 </head>
 <body>
+
+<!-- 右侧注册卡片 -->
 <div class="register-card">
-    <h2>SmartShop 注册</h2>
+    <h2>Smart Shop 注册</h2>
+    <p class="subtitle">Join our shopping platform</p>
 
     <div th:if="${success}" class="success-tip">
-        注册成功！<a th:href="@{/login}">立即登录</a>
+        注册成功！<a th:href="@{/login}">前往登录</a>
     </div>
 
     <form th:unless="${success}" th:action="@{/register}" method="post">

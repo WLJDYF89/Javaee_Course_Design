@@ -12,16 +12,13 @@
         }
 
         body {
-            background:
-                    radial-gradient(circle at top left, rgba(102, 126, 234, 0.45), transparent 35%),
-                    radial-gradient(circle at top right, rgba(118, 75, 162, 0.45), transparent 35%),
-                    linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #0f172a 100%);
+            background: #ffffff;
             color: #e0e7ff;
         }
 
         .header {
             height: 64px;
-            background: rgba(15, 23, 42, 0.85);
+            background: #ffffff;
             border-bottom: 1px solid rgba(139, 92, 246, 0.35);
             backdrop-filter: blur(12px);
             display: flex;
@@ -30,7 +27,7 @@
             padding: 0 28px;
             font-size: 22px;
             font-weight: 600;
-            color: #f8fafc;
+            color: #1e293b;
         }
 
         .header .user-info {
@@ -61,7 +58,7 @@
         /* ========== 侧边栏 ========== */
         .sidebar {
             width: 230px;
-            background: #0f172a;
+            background: #ffffff;
             height: calc(100vh - 64px);
             padding-top: 20px;
             position: relative;
@@ -85,41 +82,15 @@
 
         /* 当前选中标签 */
         .sidebar a.active {
-            background: #1a1640;
-            color: #ffffff;
-            border-radius: 28px 0 0 28px;
-        }
-
-        /* 上方弧形连接 */
-        .sidebar a.active::before {
-            content: '';
-            position: absolute;
-            top: -28px;
-            right: 0;
-            width: 28px;
-            height: 28px;
-            background: #0f172a;
-            border-radius: 0 0 28px 0;
-            box-shadow: 8px 8px 0 8px #1a1640;
-        }
-
-        /* 下方弧形连接 */
-        .sidebar a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -28px;
-            right: 0;
-            width: 28px;
-            height: 28px;
-            background: #0f172a;
-            border-radius: 0 28px 0 0;
-            box-shadow: 8px -8px 0 8px #1a1640;
+            background: #ffffff;
+            color: #3b82f6;
+            border-radius: 0 28px 28px 0;
         }
 
         /* ========== 内容区 ========== */
         .content {
             flex: 1;
-            background: #1a1640;
+            background: #ffffff;
             position: relative;
             z-index: 1;
         }

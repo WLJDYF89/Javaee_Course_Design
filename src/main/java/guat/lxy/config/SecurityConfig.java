@@ -30,6 +30,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register").permitAll()
+                        .requestMatchers("/img/**", "/css/**", "/js/**", "/**.jpg", "/**.png", "/**.webp").permitAll()
                         .requestMatchers("/category/**","/product/add","/product/edit","/product/delete").hasRole("admin")
                         .anyRequest().authenticated()
                 )
