@@ -1,20 +1,139 @@
-<h3 th:text="${category.id == null} ? '新增分类' : '编辑分类'">编辑分类</h3>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft Yahei', sans-serif;
+        }
 
-<form th:action="@{/category/save}" method="post" style="width:450px;margin-top:20px;">
-    <input type="hidden" name="id" th:value="${category.id}">
+        body {
+            background: transparent;
+            color: #e0e7ff;
+            padding: 24px;
+        }
 
-    <div style="margin-bottom:12px;">
-        <label>分类名称：</label>
-        <input name="name" th:value="${category.name}" required style="width:100%;padding:6px;">
-    </div>
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    <div style="margin-bottom:12px;">
-        <label>分类描述：</label>
-        <textarea name="descp" th:text="${category.descp}" style="width:100%;padding:6px;height:80px;"></textarea>
-    </div>
+        .card {
+            max-width: 520px;
+            background: rgba(30, 27, 75, 0.85);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 24px;
+            padding: 28px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 35px rgba(139, 92, 246, 0.25);
+        }
 
-    <div style="margin-top:20px;">
-        <button type="submit" style="padding:8px 24px;background:#27ae60;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:14px;">保存</button>
-        <a th:href="@{/category/list}" style="margin-left:12px;color:#7f8c8d;">取消</a>
-    </div>
-</form>
+        .form-item {
+            margin-bottom: 16px;
+        }
+
+        .form-item label {
+            display: block;
+            margin-bottom: 6px;
+            color: #c7d2fe;
+            font-size: 14px;
+        }
+
+        .form-item input,
+        .form-item textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 12px;
+            color: #e0e7ff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-item input:focus,
+        .form-item textarea:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        .form-item textarea {
+            min-height: 90px;
+            resize: none;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .save-btn {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            border: none;
+            border-radius: 999px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .save-btn:hover {
+            filter: brightness(1.08);
+        }
+
+        .cancel-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 999px;
+            color: #c7d2fe;
+            font-size: 15px;
+            text-decoration: none;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(139, 92, 246, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+<h2 class="page-title" th:text="${category.id == null} ? '新增分类' : '编辑分类'">编辑分类</h2>
+
+<div class="card">
+    <form th:action="@{/category/save}" method="post">
+        <input type="hidden" name="id" th:value="${category.id}">
+
+        <div class="form-item">
+            <label>分类名称</label>
+            <input name="name" th:value="${category.name}" required>
+        </div>
+
+        <div class="form-item">
+            <label>分类描述</label>
+            <textarea name="descp" th:text="${category.descp}"></textarea>
+        </div>
+
+        <div class="btn-row">
+            <button class="save-btn" type="submit">保存</button>
+            <a class="cancel-btn" th:href="@{/category/list}">取消</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

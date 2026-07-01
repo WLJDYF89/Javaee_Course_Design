@@ -3,15 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <title>系统登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft Yahei', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                    radial-gradient(circle at top left, rgba(102, 126, 234, 0.45), transparent 35%),
+                    radial-gradient(circle at bottom right, rgba(118, 75, 162, 0.45), transparent 35%),
+                    linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #0f172a 100%);
+            color: #e0e7ff;
+        }
+
+        .login-box {
+            width: 420px;
+            padding: 36px;
+            background: rgba(30, 27, 75, 0.88);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 45px rgba(139, 92, 246, 0.35);
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 26px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-item {
+            margin-bottom: 16px;
+        }
+
+        .form-item label {
+            display: block;
+            margin-bottom: 6px;
+            color: #c7d2fe;
+            font-size: 14px;
+        }
+
+        .form-item input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 12px;
+            color: #e0e7ff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-item input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        .err {
+            color: #f87171;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            border: none;
+            border-radius: 999px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-btn:hover {
+            filter: brightness(1.08);
+        }
+    </style>
 </head>
-<body style="width:400px;margin:100px auto;">
-<h2>SmartShop 登录</h2>
-<form th:action="@{/doLogin}" method="post">
-    <p>账号：<input type="text" name="username" required></p>
-    <p>密码：<input type="password" name="password" required></p>
-    <p style="color:red" th:if="${param.error}" th:text="账号或密码错误"></p>
-    <button type="submit">登录</button>
-</form>
-<p style="margin-top:12px;">没有账号？<a th:href="@{/register}">立即注册</a></p>
+<body>
+<div class="login-box">
+    <h2>SmartShop 登录</h2>
+    <form th:action="@{/doLogin}" method="post">
+        <div class="form-item">
+            <label>账号</label>
+            <input type="text" name="username" required>
+        </div>
+        <div class="form-item">
+            <label>密码</label>
+            <input type="password" name="password" required>
+        </div>
+        <div class="err" th:if="${param.error}">账号或密码错误</div>
+        <button class="login-btn" type="submit">登录</button>
+    </form>
+</div>
 </body>
 </html>

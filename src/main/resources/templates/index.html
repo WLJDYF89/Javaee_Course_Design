@@ -4,16 +4,96 @@
     <meta charset="UTF-8">
     <title>SmartShop电商管理平台</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        .header{height:60px;background:#2c3e50;color:#fff;line-height:60px;padding:0 25px;font-size:22px;display:flex;justify-content:space-between;align-items:center;}
-        .header .user-info{font-size:14px;}
-        .header .logout-btn{color:#e74c3c;text-decoration:none;margin-left:15px;padding:6px 14px;border:1px solid #e74c3c;border-radius:4px;font-size:13px;transition:all 0.2s;}
-        .header .logout-btn:hover{background:#e74c3c;color:#fff;}
-        .main-box{display:flex;}
-        .sidebar{width:220px;background:#34495e;height:calc(100vh - 60px);padding-top:30px;}
-        .sidebar a{display:block;color:#ecf0f1;padding:14px 25px;text-decoration:none;font-size:16px;}
-        .sidebar a:hover{background:#486077;}
-        iframe{flex:1;height:calc(100vh - 60px);border:none;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft Yahei', sans-serif;
+        }
+
+        body {
+            background:
+                    radial-gradient(circle at top left, rgba(102, 126, 234, 0.45), transparent 35%),
+                    radial-gradient(circle at top right, rgba(118, 75, 162, 0.45), transparent 35%),
+                    linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #0f172a 100%);
+            color: #e0e7ff;
+        }
+
+        .header {
+            height: 64px;
+            background: rgba(15, 23, 42, 0.85);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.35);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 28px;
+            font-size: 22px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .header .user-info {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .header .logout-btn {
+            color: #f87171;
+            text-decoration: none;
+            margin-left: 16px;
+            padding: 7px 16px;
+            border: 1px solid rgba(248, 113, 113, 0.35);
+            border-radius: 999px;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .header .logout-btn:hover {
+            background: rgba(248, 113, 113, 0.15);
+            border-color: #f87171;
+        }
+
+        .main-box {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 230px;
+            background: rgba(15, 23, 42, 0.88);
+            border-right: 1px solid rgba(139, 92, 246, 0.35);
+            height: calc(100vh - 64px);
+            padding-top: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .sidebar a {
+            display: block;
+            color: #c7d2fe;
+            padding: 13px 24px;
+            text-decoration: none;
+            font-size: 15px;
+            border-left: 3px solid transparent;
+            transition: 0.2s;
+        }
+
+        .sidebar a:hover {
+            background: rgba(139, 92, 246, 0.18);
+            color: #f8fafc;
+        }
+
+        .sidebar a.active {
+            border-left-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.25);
+            color: #ffffff;
+        }
+
+        iframe {
+            flex: 1;
+            height: calc(100vh - 64px);
+            border: none;
+            background: transparent;
+        }
     </style>
 </head>
 <body>
@@ -26,32 +106,34 @@
 </div>
 <div class="main-box">
     <div class="sidebar">
-        <a th:href="@{/welcome}" target="mainFrame">系统首页</a>
+        <a th:href="@{/welcome}" target="mainFrame" class="active">系统首页</a>
         <a th:href="@{/product/list}" target="mainFrame">商品管理</a>
-        <!-- 仅管理员可见分类管理 -->
         <a th:href="@{/category/list}" target="mainFrame" sec:authorize="hasRole('admin')">分类管理</a>
     </div>
     <iframe name="mainFrame" id="mainFrame" th:src="@{/welcome}"></iframe>
-    <script>
-        const iframe = document.getElementById('mainFrame');
-        // 页面加载时恢复上次的iframe页面
-        const saved = sessionStorage.getItem('mainFrameUrl');
-        if (saved) {
-            iframe.src = saved;
-        }
-        // 侧边栏链接点击时保存目标URL
-        document.querySelectorAll('.sidebar a').forEach(function(link) {
-            link.addEventListener('click', function() {
-                sessionStorage.setItem('mainFrameUrl', link.getAttribute('href'));
-            });
-        });
-        // iframe内导航变化时也更新保存的URL
-        iframe.addEventListener('load', function() {
-            try {
-                sessionStorage.setItem('mainFrameUrl', iframe.contentWindow.location.href);
-            } catch(e) {}
-        });
-    </script>
 </div>
+
+<script>
+    const iframe = document.getElementById('mainFrame');
+    const saved = sessionStorage.getItem('mainFrameUrl');
+
+    if (saved) {
+        iframe.src = saved;
+    }
+
+    document.querySelectorAll('.sidebar a').forEach(function(link) {
+        link.addEventListener('click', function() {
+            sessionStorage.setItem('mainFrameUrl', link.getAttribute('href'));
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+
+    iframe.addEventListener('load', function() {
+        try {
+            sessionStorage.setItem('mainFrameUrl', iframe.contentWindow.location.href);
+        } catch(e) {}
+    });
+</script>
 </body>
 </html>

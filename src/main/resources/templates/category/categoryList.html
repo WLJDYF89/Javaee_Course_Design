@@ -1,21 +1,130 @@
-<div style="margin-bottom:10px;">
-    <a th:href="@{/category/edit}" style="padding:6px 16px;background:#27ae60;color:#fff;text-decoration:none;border-radius:4px;font-size:14px;">+ 新增分类</a>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft Yahei', sans-serif;
+        }
+
+        body {
+            background: transparent;
+            color: #e0e7ff;
+            padding: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: rgba(30, 27, 75, 0.85);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 24px;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 35px rgba(139, 92, 246, 0.25);
+        }
+
+        .add-btn {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .add-btn:hover {
+            filter: brightness(1.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        table thead th {
+            color: #94a3b8;
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table tbody tr {
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        table tbody td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #c7d2fe;
+        }
+
+        table tbody td:first-child {
+            border-radius: 16px 0 0 16px;
+        }
+
+        table tbody td:last-child {
+            border-radius: 0 16px 16px 0;
+        }
+
+        .edit {
+            color: #38bdf8;
+            text-decoration: none;
+            margin-right: 12px;
+        }
+
+        .del {
+            color: #f87171;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<h2 class="page-title">分类管理</h2>
+
+<div class="card">
+    <a class="add-btn" th:href="@{/category/edit}">+ 新增分类</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>分类名称</th>
+            <th>分类描述</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cate : ${categoryList}">
+            <td th:text="${cate.id}"></td>
+            <td th:text="${cate.name}"></td>
+            <td th:text="${cate.descp}"></td>
+            <td>
+                <a class="edit" th:href="@{/category/edit/{id}(id=${cate.id})}">编辑</a>
+                <a class="del" th:href="@{/category/delete/{id}(id=${cate.id})}" onclick="return confirm('确定要删除该分类吗？')">删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
-<table border="1" cellpadding="6" cellspacing="0" width="98%">
-    <tr>
-        <th>ID</th>
-        <th>分类名称</th>
-        <th>分类描述</th>
-        <th>操作</th>
-    </tr>
-    <tr th:each="cate : ${categoryList}">
-        <td th:text="${cate.id}"></td>
-        <td th:text="${cate.name}"></td>
-        <td th:text="${cate.descp}"></td>
-        <td>
-            <a th:href="@{/category/edit/{id}(id=${cate.id})}" style="color:#2980b9;margin-right:10px;">编辑</a>
-            <a th:href="@{/category/delete/{id}(id=${cate.id})}" onclick="return confirm('确定要删除该分类吗？')" style="color:#e74c3c;">删除</a>
-        </td>
-    </tr>
-</table>
+</body>
+</html>

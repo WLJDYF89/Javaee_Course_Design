@@ -1,52 +1,221 @@
-<div xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-     sec:authorize="hasRole('admin')" style="margin-bottom:10px;">
-    <a th:href="@{/product/edit}" style="padding:6px 16px;background:#27ae60;color:#fff;text-decoration:none;border-radius:4px;font-size:14px;">+ 新增商品</a>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft Yahei', sans-serif;
+        }
+
+        body {
+            background: transparent;
+            color: #e0e7ff;
+            padding: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: rgba(30, 27, 75, 0.85);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 24px;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 35px rgba(139, 92, 246, 0.25);
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .add-btn {
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .add-btn:hover {
+            filter: brightness(1.08);
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input, select {
+            padding: 8px 12px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 12px;
+            color: #e0e7ff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        button {
+            padding: 8px 16px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            border: none;
+            border-radius: 999px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            filter: brightness(1.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        table thead th {
+            color: #94a3b8;
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table tbody tr {
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        table tbody td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #c7d2fe;
+        }
+
+        table tbody td:first-child {
+            border-radius: 16px 0 0 16px;
+        }
+
+        table tbody td:last-child {
+            border-radius: 0 16px 16px 0;
+        }
+
+        .edit {
+            color: #38bdf8;
+            text-decoration: none;
+            margin-right: 12px;
+        }
+
+        .del {
+            color: #f87171;
+            text-decoration: none;
+        }
+
+        .page {
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .page a {
+            margin: 0 6px;
+            color: #8b5cf6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .page span {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<h2 class="page-title">商品管理</h2>
+
+<div class="card">
+    <div class="toolbar">
+        <form th:action="@{/product/list}" method="get">
+            <select name="catId">
+                <option value="">全部分类</option>
+                <option th:each="cate:${cateList}" th:value="${cate.id}" th:text="${cate.name}"
+                        th:selected="${cate.id == catId}"></option>
+            </select>
+            <input name="name" th:value="${name}" placeholder="商品名称">
+            <input name="minPrice" th:value="${minPrice}" placeholder="最低价">
+            <input name="maxPrice" th:value="${maxPrice}" placeholder="最高价">
+            <button type="submit">搜索</button>
+        </form>
+
+        <div xmlns:sec="http://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('admin')">
+            <a class="add-btn" th:href="@{/product/edit}">+ 新增商品</a>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>商品名称</th>
+            <th>售价</th>
+            <th>所属分类</th>
+            <th>发布日期</th>
+            <th xmlns:sec="http://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('admin')">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="prod : ${pageInfo.list}">
+            <td th:text="${prod.id}"></td>
+            <td th:text="${prod.name}"></td>
+            <td th:text="${prod.price}"></td>
+            <td th:text="${prod.categoryName}"></td>
+            <td th:text="${prod.releaseDate}"></td>
+            <td xmlns:sec="http://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('admin')">
+                <a class="edit" th:href="@{/product/edit/{id}(id=${prod.id})}">编辑</a>
+                <a class="del" th:href="@{/product/delete/{id}(id=${prod.id})}" onclick="return confirm('确定要删除该商品吗？')">删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="page">
+        <a th:href="@{/product/list(pageNum=1,catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">首页</a>
+        <a th:if="${pageInfo.hasPreviousPage}"
+           th:href="@{/product/list(pageNum=${pageInfo.prePage},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">上一页</a>
+        <span th:text="|当前页：${pageInfo.pageNum}/${pageInfo.pages}|"></span>
+        <a th:if="${pageInfo.hasNextPage}"
+           th:href="@{/product/list(pageNum=${pageInfo.nextPage},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">下一页</a>
+        <a th:href="@{/product/list(pageNum=${pageInfo.pages},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">尾页</a>
+    </div>
 </div>
 
-<form th:action="@{/product/list}" method="get">
-<!--    分类：-->
-    <select name="catId">
-        <option value="">全部分类</option>
-        <option th:each="cate:${cateList}" th:value="${cate.id}" th:text="${cate.name}"
-                th:selected="${cate.id == catId}"></option>
-    </select>
-<!--    商品名：-->
-    <input name="name" th:value="${name}">
-<!--    价格区间：-->
-    <input name="minPrice" th:value="${minPrice}" placeholder="最低">
-<!--    ~-->
-    <input name="maxPrice" th:value="${maxPrice}" placeholder="最高">
-    <button type="submit">搜索</button>
-</form>
-
-<table border="1" cellpadding="6" cellspacing="0" width="98%" style="margin-top:10px;">
-    <tr>
-        <th>ID</th>
-        <th>商品名称</th>
-        <th>售价</th>
-        <th>所属分类</th>
-        <th>发布日期</th>
-        <th xmlns:sec="http://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('admin')">操作</th>
-    </tr>
-    <tr th:each="prod : ${pageInfo.list}">
-        <td th:text="${prod.id}"></td>
-        <td th:text="${prod.name}"></td>
-        <td th:text="${prod.price}"></td>
-        <td th:text="${prod.categoryName}"></td>
-        <td th:text="${prod.releaseDate}"></td>
-        <td xmlns:sec="http://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('admin')">
-            <a th:href="@{/product/edit/{id}(id=${prod.id})}" style="color:#2980b9;margin-right:10px;">编辑</a>
-            <a th:href="@{/product/delete/{id}(id=${prod.id})}" onclick="return confirm('确定要删除该商品吗？')" style="color:#e74c3c;">删除</a>
-        </td>
-    </tr>
-</table>
-
-<div style="margin-top:10px;">
-    <a th:href="@{/product/list(pageNum=1,catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">首页</a>
-    <a th:if="${pageInfo.hasPreviousPage}"
-       th:href="@{/product/list(pageNum=${pageInfo.prePage},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">上一页</a>
-    <span th:text="|当前页：${pageInfo.pageNum}/${pageInfo.pages}|"></span>
-    <a th:if="${pageInfo.hasNextPage}"
-       th:href="@{/product/list(pageNum=${pageInfo.nextPage},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">下一页</a>
-    <a th:href="@{/product/list(pageNum=${pageInfo.pages},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">尾页</a>
-</div>
+</body>
+</html>
