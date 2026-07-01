@@ -1,0 +1,20 @@
+<h3 th:text="${category.id == null} ? '新增分类' : '编辑分类'">编辑分类</h3>
+
+<form th:action="@{/category/save}" method="post" style="width:450px;margin-top:20px;">
+    <input type="hidden" name="id" th:value="${category.id}">
+
+    <div style="margin-bottom:12px;">
+        <label>分类名称：</label>
+        <input name="name" th:value="${category.name}" required style="width:100%;padding:6px;">
+    </div>
+
+    <div style="margin-bottom:12px;">
+        <label>分类描述：</label>
+        <textarea name="descp" th:text="${category.descp}" style="width:100%;padding:6px;height:80px;"></textarea>
+    </div>
+
+    <div style="margin-top:20px;">
+        <button type="submit" style="padding:8px 24px;background:#27ae60;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:14px;">保存</button>
+        <a th:href="@{/category/list}" style="margin-left:12px;color:#7f8c8d;">取消</a>
+    </div>
+</form>

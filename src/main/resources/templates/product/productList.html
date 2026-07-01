@@ -1,0 +1,52 @@
+<div xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     sec:authorize="hasRole('admin')" style="margin-bottom:10px;">
+    <a th:href="@{/product/edit}" style="padding:6px 16px;background:#27ae60;color:#fff;text-decoration:none;border-radius:4px;font-size:14px;">+ 新增商品</a>
+</div>
+
+<form th:action="@{/product/list}" method="get">
+<!--    分类：-->
+    <select name="catId">
+        <option value="">全部分类</option>
+        <option th:each="cate:${cateList}" th:value="${cate.id}" th:text="${cate.name}"
+                th:selected="${cate.id == catId}"></option>
+    </select>
+<!--    商品名：-->
+    <input name="name" th:value="${name}">
+<!--    价格区间：-->
+    <input name="minPrice" th:value="${minPrice}" placeholder="最低">
+<!--    ~-->
+    <input name="maxPrice" th:value="${maxPrice}" placeholder="最高">
+    <button type="submit">搜索</button>
+</form>
+
+<table border="1" cellpadding="6" cellspacing="0" width="98%" style="margin-top:10px;">
+    <tr>
+        <th>ID</th>
+        <th>商品名称</th>
+        <th>售价</th>
+        <th>所属分类</th>
+        <th>发布日期</th>
+        <th xmlns:sec="http://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('admin')">操作</th>
+    </tr>
+    <tr th:each="prod : ${pageInfo.list}">
+        <td th:text="${prod.id}"></td>
+        <td th:text="${prod.name}"></td>
+        <td th:text="${prod.price}"></td>
+        <td th:text="${prod.categoryName}"></td>
+        <td th:text="${prod.releaseDate}"></td>
+        <td xmlns:sec="http://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('admin')">
+            <a th:href="@{/product/edit/{id}(id=${prod.id})}" style="color:#2980b9;margin-right:10px;">编辑</a>
+            <a th:href="@{/product/delete/{id}(id=${prod.id})}" onclick="return confirm('确定要删除该商品吗？')" style="color:#e74c3c;">删除</a>
+        </td>
+    </tr>
+</table>
+
+<div style="margin-top:10px;">
+    <a th:href="@{/product/list(pageNum=1,catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">首页</a>
+    <a th:if="${pageInfo.hasPreviousPage}"
+       th:href="@{/product/list(pageNum=${pageInfo.prePage},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">上一页</a>
+    <span th:text="|当前页：${pageInfo.pageNum}/${pageInfo.pages}|"></span>
+    <a th:if="${pageInfo.hasNextPage}"
+       th:href="@{/product/list(pageNum=${pageInfo.nextPage},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">下一页</a>
+    <a th:href="@{/product/list(pageNum=${pageInfo.pages},catId=${catId},name=${name},minPrice=${minPrice},maxPrice=${maxPrice})}">尾页</a>
+</div>

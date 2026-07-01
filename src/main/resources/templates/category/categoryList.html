@@ -1,0 +1,21 @@
+<div style="margin-bottom:10px;">
+    <a th:href="@{/category/edit}" style="padding:6px 16px;background:#27ae60;color:#fff;text-decoration:none;border-radius:4px;font-size:14px;">+ 新增分类</a>
+</div>
+
+<table border="1" cellpadding="6" cellspacing="0" width="98%">
+    <tr>
+        <th>ID</th>
+        <th>分类名称</th>
+        <th>分类描述</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="cate : ${categoryList}">
+        <td th:text="${cate.id}"></td>
+        <td th:text="${cate.name}"></td>
+        <td th:text="${cate.descp}"></td>
+        <td>
+            <a th:href="@{/category/edit/{id}(id=${cate.id})}" style="color:#2980b9;margin-right:10px;">编辑</a>
+            <a th:href="@{/category/delete/{id}(id=${cate.id})}" onclick="return confirm('确定要删除该分类吗？')" style="color:#e74c3c;">删除</a>
+        </td>
+    </tr>
+</table>

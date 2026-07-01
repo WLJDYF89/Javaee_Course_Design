@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+</head>
+<body style="width:400px;margin:100px auto;">
+<h2>SmartShop 注册</h2>
+<div th:if="${success}" style="color:green;margin-bottom:12px;">
+    注册成功！<a th:href="@{/login}">去登录</a>
+</div>
+<form th:unless="${success}" th:action="@{/register}" method="post">
+    <p>账号：<input type="text" name="username" required></p>
+    <p>密码：<input type="password" name="password" required></p>
+    <p>确认密码：<input type="password" name="confirmPassword" required></p>
+    <p style="color:red" th:if="${error}" th:text="${error}"></p>
+    <button type="submit">注册</button>
+</form>
+<p style="margin-top:12px;">已有账号？<a th:href="@{/login}">返回登录</a></p>
+</body>
+</html>
