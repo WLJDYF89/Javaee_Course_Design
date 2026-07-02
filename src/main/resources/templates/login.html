@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin">
     <title>系统登录</title>
     <style>
         * {
@@ -9,6 +10,10 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Microsoft Yahei', sans-serif;
+        }
+
+        html {
+            background-color: #f0f0f0;
         }
 
         body {
@@ -24,8 +29,10 @@
         }
 
 
-
-        /* 右侧登录卡片 */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
         .login-box {
             width: 420px;
             padding: 36px;
@@ -37,7 +44,9 @@
                     0 18px 45px rgba(0, 0, 0, 0.08),
                     0 0 0 1px rgba(168, 85, 247, 0.04);
             z-index: 1;
+            animation: slideUp 0.4s ease-out;
         }
+
 
         .login-box h2 {
             text-align: center;
@@ -101,9 +110,22 @@
             transition: 0.2s ease;
         }
 
-
         .login-btn:hover {
             filter: brightness(1.08);
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #043fc5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-link:hover {
+            color: #38bdf8;
         }
 
         .register-link {
@@ -154,6 +176,8 @@
             <label>密码</label>
             <input type="password" name="password" required>
         </div>
+
+        <a class="forgot-link" th:href="@{/forgot-password}">忘记密码?</a>
 
         <div class="err" th:if="${param.error}">账号或密码错误</div>
 

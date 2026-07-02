@@ -50,21 +50,19 @@
             background: #dc2626;
         }
 
-
         .main-box {
             display: flex;
         }
 
         .sidebar {
             width: 220px;
-            background: #d9dee4;
+            background: #dee1e8;
             height: calc(100vh - 60px);
             padding-top: 16px;
             position: relative;
             z-index: 2;
             flex-shrink: 0;
         }
-
 
         .sidebar a {
             display: block;
@@ -90,7 +88,6 @@
             margin-right: 0;
         }
 
-
         .content {
             flex: 1;
             background: #dadfe5;
@@ -103,7 +100,64 @@
             height: calc(100vh - 60px);
             border: none;
             background: #dadfe5;
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.2s ease, transform 0.2s ease;
         }
+        iframe.fading {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+
+        .global-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.35); backdrop-filter: blur(4px);
+            z-index: 9999;
+            justify-content: center; align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .global-modal.show {
+            opacity: 1;
+        }
+        .global-modal .modal-card {
+            background: #ffffff; border-radius: 20px; padding: 32px; width: 520px;
+            max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(30px);
+            transition: transform 0.3s ease;
+        }
+        .global-modal.show .modal-card {
+            transform: translateY(0);
+        }
+        .global-modal .modal-card h3 {
+            font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 20px;
+        }
+        .global-modal .form-item { margin-bottom: 16px; }
+        .global-modal .form-item label {
+            display: block; margin-bottom: 6px; color: #4b5563; font-size: 14px;
+        }
+        .global-modal .form-item input, .global-modal .form-item select, .global-modal .form-item textarea {
+            width: 100%; padding: 10px 12px; background: #eef1f7; border: 1px solid #e5e7eb;
+            border-radius: 10px; color: #111827; font-size: 15px; outline: none;
+        }
+        .global-modal .form-item input:focus, .global-modal .form-item select:focus, .global-modal .form-item textarea:focus {
+            border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+        }
+        .global-modal .form-item textarea { min-height: 80px; resize: none; }
+        .global-modal .btn-row { display: flex; gap: 12px; margin-top: 20px; }
+        .global-modal .save-btn {
+            flex: 1; padding: 12px; background: #507593; border: none; border-radius: 999px;
+            color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s;
+        }
+        .global-modal .save-btn:hover { background: #1e1e2e; }
+        .global-modal .cancel-btn {
+            flex: 1; padding: 12px; background: #f3f4f6; border: 1px solid #e5e7eb;
+            border-radius: 999px; color: #4b5563; font-size: 15px; cursor: pointer; transition: 0.2s;
+        }
+        .global-modal .cancel-btn:hover { background: #e5e7eb; }
     </style>
 </head>
 <body>
@@ -116,12 +170,31 @@
 </div>
 <div class="main-box">
     <div class="sidebar">
-        <a th:href="@{/welcome}" target="mainFrame" class="active">系统首页</a>
-        <a th:href="@{/product/list}" target="mainFrame">商品管理</a>
-        <a th:href="@{/category/list}" target="mainFrame" sec:authorize="hasRole('admin')">分类管理</a>
+        <a th:href="@{/welcome}" target="mainFrame" class="active">⌂ 首页</a>
+        <a th:href="@{/product/list}" target="mainFrame">☰ 商品管理</a>
+        <a th:href="@{/category/list}" target="mainFrame" sec:authorize="hasRole('admin')">☷ 分类管理</a>
     </div>
     <div class="content">
         <iframe name="mainFrame" id="mainFrame"></iframe>
+    </div>
+</div>
+
+<div class="global-modal" id="globalModal">
+    <div class="modal-card">
+        <h3 id="modalTitle"></h3>
+        <form id="modalForm">
+            <input type="hidden" name="id" id="modalId">
+            <div class="form-item" id="modalNameField"><label>名称</label><input name="name" id="modalName" required></div>
+            <div class="form-item" id="modalPriceField" style="display:none"><label>售价</label><input name="price" id="modalPrice" type="number" step="0.01"></div>
+            <div class="form-item" id="modalCatIdField" style="display:none"><label>所属分类</label><select name="catId" id="modalCatId"></select></div>
+            <div class="form-item" id="modalDescpField" style="display:none"><label>描述</label><textarea name="descp" id="modalDescp"></textarea></div>
+            <div class="form-item" id="modalPhotoField" style="display:none"><label>图片URL</label><input name="photoUrl" id="modalPhotoUrl"></div>
+            <div class="form-item" id="modalReleaseDateField" style="display:none"><label>发布日期</label><input name="releaseDate" id="modalReleaseDate" type="date"></div>
+            <div class="btn-row">
+                <button class="save-btn" type="submit">保存</button>
+                <button class="cancel-btn" type="button" onclick="closeGlobalModal()">取消</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -138,15 +211,113 @@
     }
     setActive(saved || defaultUrl);
 
+    function navigateTo(url) {
+        iframe.classList.add('fading');
+        setTimeout(function() {
+            iframe.src = url;
+            sessionStorage.setItem('mainFrameUrl', url);
+            setActive(url);
+            iframe.style.transform = 'translateY(20px)';
+            iframe.onload = function() {
+                iframe.offsetHeight;
+                iframe.classList.remove('fading');
+                iframe.style.transform = '';
+                iframe.onload = null;
+            };
+        }, 50);
+    }
+
+
     document.querySelectorAll('.sidebar a').forEach(function(link) {
-        link.addEventListener('click', function() {
-            sessionStorage.setItem('mainFrameUrl', link.getAttribute('href'));
-            setActive(link.getAttribute('href'));
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            navigateTo(link.getAttribute('href'));
         });
     });
 
-    iframe.addEventListener('load', function() {
-        try { sessionStorage.setItem('mainFrameUrl', iframe.contentWindow.location.href); } catch(e) {}
+    const globalModal = document.getElementById('globalModal');
+    const modalForm = document.getElementById('modalForm');
+    const modalTitle = document.getElementById('modalTitle');
+    let modalSaveUrl = '';
+
+    function showGlobalModal(config) {
+        modalTitle.textContent = config.title;
+        modalSaveUrl = config.saveUrl;
+        document.getElementById('modalId').value = config.data.id || '';
+
+        document.getElementById('modalNameField').style.display = 'block';
+        document.getElementById('modalName').value = config.data.name || '';
+
+        var priceField = document.getElementById('modalPriceField');
+        var catField = document.getElementById('modalCatIdField');
+        var descpField = document.getElementById('modalDescpField');
+        var photoField = document.getElementById('modalPhotoField');
+        var dateField = document.getElementById('modalReleaseDateField');
+
+        if (config.type === 'openProductModal') {
+            priceField.style.display = 'block';
+            catField.style.display = 'block';
+            descpField.style.display = 'block';
+            photoField.style.display = 'block';
+            dateField.style.display = 'block';
+            document.getElementById('modalPrice').value = config.data.price || '';
+            document.getElementById('modalDescp').value = config.data.descp || '';
+            document.getElementById('modalPhotoUrl').value = config.data.photoUrl || '';
+            document.getElementById('modalReleaseDate').value = config.data.releaseDate || '';
+            var catSelect = document.getElementById('modalCatId');
+            catSelect.innerHTML = config.cateOptions || '';
+            catSelect.value = config.data.catId || '';
+        } else {
+            priceField.style.display = 'none';
+            catField.style.display = 'none';
+            descpField.style.display = 'block';
+            photoField.style.display = 'none';
+            dateField.style.display = 'none';
+            document.getElementById('modalDescp').value = config.data.descp || '';
+        }
+        globalModal.style.display = 'flex';
+        globalModal.offsetHeight;
+        globalModal.classList.add('show');
+    }
+
+    function closeGlobalModal() {
+        globalModal.classList.remove('show');
+        setTimeout(function() {
+            globalModal.style.display = 'none';
+        }, 300);
+    }
+
+    globalModal.addEventListener('click', function(e) {
+        if (e.target === globalModal) closeGlobalModal();
+    });
+
+    modalForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var fd = new FormData(modalForm);
+        var p = new URLSearchParams();
+        fd.forEach(function(v, k) { p.append(k, v); });
+        fetch(modalSaveUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: p.toString()
+        }).then(function(r) {
+            if (r.ok || r.redirected) {
+                closeGlobalModal();
+                iframe.contentWindow.location.reload();
+            }
+        });
+    });
+
+    window.addEventListener('message', function(e) {
+        if (e.data && e.data.type === 'openProductModal') {
+            showGlobalModal(e.data);
+        }
+        if (e.data && e.data.type === 'openCategoryModal') {
+            showGlobalModal(e.data);
+        }
+        if (e.data && e.data.type === 'nav') {
+            navigateTo(e.data.url);
+        }
     });
 </script>
 </body>

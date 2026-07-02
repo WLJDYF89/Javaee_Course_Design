@@ -22,4 +22,7 @@ public interface UserMapper {
 
     @Insert("INSERT INTO t_user_role(user_id, role_id) VALUES(#{userId}, (SELECT id FROM t_role WHERE role = 'ROLE_normal'))")
     int insertUserRole(@Param("userId") Integer userId);
+
+    @Update("UPDATE t_user SET password = #{password} WHERE id = #{id}")
+    int updatePassword(@Param("id") Integer id, @Param("password") String password);
 }

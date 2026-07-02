@@ -27,5 +27,15 @@ public class UserService {
         userMapper.insertUserRole(user.getId());
         return true;
     }
+
+    @Transactional
+    public boolean resetPassword(String username, String newPassword) {
+        User exist = userMapper.selectUserByUsername(username);
+        if (exist == null) {
+            return false;
+        }
+        userMapper.updatePassword(exist.getId(), passwordEncoder.encode(newPassword));
+        return true;
+    }
 }
 

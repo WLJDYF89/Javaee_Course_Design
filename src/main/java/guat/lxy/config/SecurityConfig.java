@@ -29,7 +29,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/", true)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register").permitAll()
+                        .requestMatchers("/login", "/register", "/forgot-password").permitAll()
                         .requestMatchers("/img/**", "/css/**", "/js/**", "/**.jpg", "/**.png", "/**.webp").permitAll()
                         .requestMatchers("/category/**","/product/add","/product/edit","/product/delete").hasRole("admin")
                         .anyRequest().authenticated()
