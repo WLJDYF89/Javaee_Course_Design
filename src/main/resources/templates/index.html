@@ -12,100 +12,103 @@
         }
 
         body {
-            background: #ffffff;
-            color: #e0e7ff;
+            background: #dadfe5;
+            color: #1e1e2e;
         }
 
         .header {
-            height: 64px;
-            background: #ffffff;
-            border-bottom: 1px solid rgba(139, 92, 246, 0.35);
-            backdrop-filter: blur(12px);
+            height: 60px;
+            background: #dadfe5;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 28px;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
-            color: #1e293b;
+            color: #111827;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
 
         .header .user-info {
             font-size: 14px;
-            color: #94a3b8;
+            color: #9ca3af;
         }
 
         .header .logout-btn {
-            color: #f87171;
+            color: #ffffff;
             text-decoration: none;
-            margin-left: 16px;
-            padding: 7px 16px;
-            border: 1px solid rgba(248, 113, 113, 0.35);
+            margin-left: 14px;
+            padding: 6px 14px;
+            background: #ef4444;
+            border: none;
             border-radius: 999px;
             font-size: 13px;
             transition: 0.2s;
         }
 
         .header .logout-btn:hover {
-            background: rgba(248, 113, 113, 0.15);
-            border-color: #f87171;
+            background: #dc2626;
         }
+
 
         .main-box {
             display: flex;
         }
 
-        /* ========== 侧边栏 ========== */
         .sidebar {
-            width: 230px;
-            background: #ffffff;
-            height: calc(100vh - 64px);
-            padding-top: 20px;
+            width: 220px;
+            background: #d9dee4;
+            height: calc(100vh - 60px);
+            padding-top: 16px;
             position: relative;
             z-index: 2;
+            flex-shrink: 0;
         }
+
 
         .sidebar a {
             display: block;
-            color: #94a3b8;
-            padding: 14px 24px;
-            margin: 6px 0;
+            color: #4b5563;
+            padding: 13px 24px;
+            margin: 4px 12px;
             text-decoration: none;
-            font-size: 15px;
-            position: relative;
+            font-size: 14px;
+            border-radius: 10px;
             transition: 0.2s;
         }
 
         .sidebar a:hover {
-            color: #c7d2fe;
+            color: #111827;
+            background: #e5e7eb;
         }
 
-        /* 当前选中标签 */
         .sidebar a.active {
-            background: #ffffff;
-            color: #3b82f6;
+            background: #1e1e2e;
+            color: #ffffff;
+            font-weight: 600;
             border-radius: 0 28px 28px 0;
+            margin-right: 0;
         }
 
-        /* ========== 内容区 ========== */
+
         .content {
             flex: 1;
-            background: #ffffff;
+            background: #dadfe5;
             position: relative;
             z-index: 1;
         }
 
         iframe {
             width: 100%;
-            height: calc(100vh - 64px);
+            height: calc(100vh - 60px);
             border: none;
-            background: transparent;
+            background: #dadfe5;
         }
     </style>
 </head>
 <body>
 <div class="header">
-    <span>SmartShop 综合管理系统</span>
+    <span>SmartShop</span>
     <span class="user-info">
         欢迎, <strong sec:authentication="name">用户</strong>
         <a class="logout-btn" th:href="@{/logout}">退出登录</a>
@@ -126,23 +129,15 @@
     const iframe = document.getElementById('mainFrame');
     const defaultUrl = '/welcome';
     const saved = sessionStorage.getItem('mainFrameUrl');
-
-    // 刷新：恢复上次的页面；首次登录：没有保存记录，使用默认首页
     iframe.src = saved || defaultUrl;
 
-    // 根据当前 iframe URL 恢复侧边栏高亮
     function setActive(url) {
         document.querySelectorAll('.sidebar a').forEach(function(a) {
-            if (a.getAttribute('href') === url) {
-                a.classList.add('active');
-            } else {
-                a.classList.remove('active');
-            }
+            a.classList.toggle('active', a.getAttribute('href') === url);
         });
     }
     setActive(saved || defaultUrl);
 
-    // 点击侧边栏时：保存 URL、更新高亮
     document.querySelectorAll('.sidebar a').forEach(function(link) {
         link.addEventListener('click', function() {
             sessionStorage.setItem('mainFrameUrl', link.getAttribute('href'));
@@ -150,11 +145,8 @@
         });
     });
 
-    // iframe 内页面跳转时（如分页、提交表单），同步保存 URL
     iframe.addEventListener('load', function() {
-        try {
-            sessionStorage.setItem('mainFrameUrl', iframe.contentWindow.location.href);
-        } catch(e) {}
+        try { sessionStorage.setItem('mainFrameUrl', iframe.contentWindow.location.href); } catch(e) {}
     });
 </script>
 </body>

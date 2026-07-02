@@ -3,142 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Microsoft Yahei', sans-serif;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Microsoft Yahei',sans-serif; }
         body {
-            background: transparent;
-            color: #e0e7ff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
+            background:#dadfe5; color:#111827; min-height:100vh;
+            display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px;
         }
-
-        .page-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
+        .page-title { font-size:22px; font-weight:700; margin-bottom:20px; }
         .card {
-            width: 50%;
-            background: #ffffff;
-            border: 1px solid rgba(139, 92, 246, 0.35);
-            border-radius: 24px;
-            padding: 28px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 0 35px rgba(139, 92, 246, 0.25);
+            width:50%; background:#ffffff; border-radius:16px; padding:28px;
+            box-shadow:0 2px 12px rgba(0,0,0,0.06);
         }
-
-        .form-item {
-            margin-bottom: 16px;
+        .form-item { margin-bottom:16px; }
+        .form-item label { display:block; margin-bottom:6px; color:#4b5563; font-size:14px; }
+        .form-item input, .form-item textarea {
+            width:100%; padding:10px 12px; background:#eef1f7; border:1px solid #e5e7eb;
+            border-radius:10px; color:#111827; font-size:15px; outline:none;
         }
-
-        .form-item label {
-            display: block;
-            margin-bottom: 6px;
-            color: #c7d2fe;
-            font-size: 14px;
-        }
-
-        .form-item input,
-        .form-item textarea {
-            width: 100%;
-            padding: 10px 12px;
-            background: #ffffff;
-            border: 1px solid rgba(139, 92, 246, 0.35);
-            border-radius: 12px;
-            color: #e0e7ff;
-            font-size: 15px;
-            outline: none;
-        }
-
-        .form-item input:focus,
-        .form-item textarea:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
-        }
-
-        .form-item textarea {
-            min-height: 90px;
-            resize: none;
-        }
-
-        .btn-row {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
+        .form-item input:focus, .form-item textarea:focus { border-color:#8b5cf6; }
+        .form-item textarea { min-height:90px; resize:none; }
+        .btn-row { display:flex; gap:12px; margin-top:20px; }
         .save-btn {
-            flex: 1;
-            padding: 12px;
-            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
-            border: none;
-            border-radius: 999px;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
+            flex:1; padding:12px; background:#507593; border:none; border-radius:999px;
+            color:#fff; font-size:15px; font-weight:600; cursor:pointer; transition:0.2s;
         }
-
-        .save-btn:hover {
-            filter: brightness(1.08);
-        }
+        .save-btn:hover { background:#1e1e2e; }
 
         .cancel-btn {
-            flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: 1px solid rgba(139, 92, 246, 0.35);
-            border-radius: 999px;
-            color: #c7d2fe;
-            font-size: 15px;
-            text-decoration: none;
-            text-align: center;
-            transition: 0.2s;
+            flex:1; padding:12px; background:#f3f4f6; border:1px solid #e5e7eb;
+            border-radius:999px; color:#4b5563; font-size:15px; text-decoration:none;
+            text-align:center; transition:0.2s;
         }
-
-        .cancel-btn:hover {
-            background: rgba(139, 92, 246, 0.15);
-        }
+        .cancel-btn:hover { background:#e5e7eb; }
     </style>
 </head>
 <body>
-
 <h2 class="page-title" th:text="${category.id == null} ? '新增分类' : '编辑分类'">编辑分类</h2>
-
 <div class="card">
     <form th:action="@{/category/save}" method="post">
         <input type="hidden" name="id" th:value="${category.id}">
-
-        <div class="form-item">
-            <label>分类名称</label>
-            <input name="name" th:value="${category.name}" required>
-        </div>
-
-        <div class="form-item">
-            <label>分类描述</label>
-            <textarea name="descp" th:text="${category.descp}"></textarea>
-        </div>
-
+        <div class="form-item"><label>分类名称</label><input name="name" th:value="${category.name}" required></div>
+        <div class="form-item"><label>分类描述</label><textarea name="descp" th:text="${category.descp}"></textarea></div>
         <div class="btn-row">
             <button class="save-btn" type="submit">保存</button>
             <a class="cancel-btn" th:href="@{/category/list}">取消</a>
         </div>
     </form>
 </div>
-
 </body>
 </html>
